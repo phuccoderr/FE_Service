@@ -1,0 +1,18 @@
+@import "tailwindcss";
+/* Carousel */
+.ant-carousel .slick-slide {
+  display: flex;
+  justify-content: space-between; /* Căn đều các phần tử */
+}
+
+.ant-carousel .slick-track {
+  display: flex;
+}
+
+.slick-dots li {
+  background-color: rgb(97, 93, 93);
+}
+
+.slick-dots li.slick-active::after {
+  background-color: rgb(99, 99, 195);
+}
