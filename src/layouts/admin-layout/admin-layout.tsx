@@ -42,6 +42,11 @@ export default function AdminLayout() {
           onClick={(e) => handleSidebarItem(e.key)}
           items={[
             {
+              key: "dashboard",
+              icon: <MedicineBoxOutlined />,
+              label: "Trang chủ",
+            },
+            {
               key: "package-category",
               icon: <MedicineBoxOutlined />,
               label: "Gói danh mục",

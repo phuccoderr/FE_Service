@@ -31,4 +31,18 @@ export const userApi = {
     const res = (await http.put("/users", body)) as ApiResponseType<null>;
     return res.data;
   },
+  forgotPassword: async (email: string) => {
+    const res = (await http.post("/users/forgot_password", {
+      email: email,
+    })) as ApiResponseType<null>;
+    return res.data;
+  },
+  resetPassword: async (token: string, password: string) => {
+    const res = (await http.post("/users/reset_password", {
+      token,
+      password,
+    })) as ApiResponseType<null>;
+
+    return res.data;
+  },
 };

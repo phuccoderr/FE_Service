@@ -14,6 +14,9 @@ import Profile from "@/pages/home/profile";
 import Checkout from "@/pages/home/checkout";
 import Thank from "@/pages/home/thank";
 import GuestOrder from "@/pages/admin/guest-order";
+import Admin from "@/pages/admin";
+import ForgotPassword from "@/pages/forgot-password";
+import ResetPassword from "@/pages/reset-password";
 
 const Provider = () => {
   return (
@@ -63,6 +66,14 @@ const AppRouter = createBrowserRouter([
             path: "/login",
             element: <Login />,
           },
+          {
+            path: "/forgot-password",
+            element: <ForgotPassword />,
+          },
+          {
+            path: "/reset-password",
+            element: <ResetPassword />,
+          },
         ],
       },
       {
@@ -101,6 +112,10 @@ const AppRouter = createBrowserRouter([
             path: "/admin",
             element: <AdminLayout />,
             children: [
+              {
+                path: "dashboard",
+                element: <Admin />,
+              },
               {
                 path: "package-category",
                 element: <PackageCategory />,
