@@ -9,4 +9,14 @@ export const subscriptionApi = {
     >;
     return res.data;
   },
+  updateStatus: async (
+    id: number,
+    body: { status: "active" | "expired" | "cancelled" }
+  ) => {
+    const res = (await http.put(
+      `/subscriptions/${id}`,
+      body
+    )) as ApiResponseType<null>;
+    return res.data;
+  },
 };

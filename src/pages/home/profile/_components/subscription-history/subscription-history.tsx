@@ -3,8 +3,19 @@ import { TANSTACK_KEY } from "@/config/tanstack-key.config";
 import { SubscriptionType } from "@/types/subscription/subscription.type";
 import { formatDateTimestamp } from "@/utils/format.util";
 import { useQuery } from "@tanstack/react-query";
-import { Col, Input, Row, Table, TableProps } from "antd";
+import {
+  Col,
+  Input,
+  message,
+  Modal,
+  Row,
+  Select,
+  Table,
+  TableProps,
+} from "antd";
 import { useState } from "react";
+import { ExclamationCircleFilled, EyeOutlined } from "@ant-design/icons";
+import { queryClient } from "@/query-client";
 
 export default function SubscriptionHistory() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -16,6 +27,28 @@ export default function SubscriptionHistory() {
   const filteredData = subscriptions?.filter((sub) =>
     sub.package.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const showChangeOrderStatusConfirm = (
+    id: number,
+    status: "active" | "expired" | "cancelled"
+  ) => {
+    Modal.confirm({
+      title: "Thay đổi trạng thái dịch vụ gói cước",
+      icon: <ExclamationCircleFilled />,
+      content: "Bạn có chắc chắn muốn thay đổi trạng thái dịch vụ gói cước ?",
+      onOk: async () => {
+        try {
+          await subscriptionApi.updateStatus(id, { status });
+          queryClient.refetchQueries({
+            queryKey: [TANSTACK_KEY.SUBSCRIPTION_ALL],
+          });
+          message.success("Thay đổi trạng thái dịch vụ gói cước thành công");
+        } catch (error: any) {
+          message.error(error.message);
+        }
+      },
+    });
+  };
 
   const columns: TableProps<SubscriptionType>["columns"] = [
     {
@@ -60,27 +93,18 @@ export default function SubscriptionHistory() {
       dataIndex: "order_status",
       key: "order_status",
       width: 200,
-      render: (_, record) => {
-        if (record.status === "active") {
-          return (
-            <span className="text-sm text-green-600 bg-green-200 p-1 rounded">
-              Đang hoạt động
-            </span>
-          );
-        } else if (record.status === "expired") {
-          return (
-            <span className="text-sm text-yellow-600 bg-yellow-200 p-1 rounded">
-              Đã hết hạn
-            </span>
-          );
-        } else {
-          return (
-            <span className="text-sm text-red-600 bg-red-200 p-1 rounded">
-              Đã huỷ
-            </span>
-          );
-        }
-      },
+      render: (_, record) => (
+        <Select
+          value={record.status}
+          style={{ width: "100%" }}
+          onChange={(value) => showChangeOrderStatusConfirm(record.id, value)}
+          disabled={record.status === "cancelled"}
+          options={[
+            { value: "active", label: "Đang hoạt động" },
+            { value: "cancelled", label: "Huỷ bỏ dịch vụ" },
+          ]}
+        />
+      ),
     },
   ];
 
